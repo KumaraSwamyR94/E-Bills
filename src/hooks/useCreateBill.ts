@@ -13,6 +13,7 @@ const createBillSchema = z.object({
   currentReading: z.string().min(1, "Current reading is required"),
   ratePerUnit: z.string().min(1, "Rate is required"),
   fixedCharges: z.string(),
+  calculationMethod: z.enum(["ADD", "MAX"]),
 }).refine((data) => {
     const prev = parseFloat(data.previousReading) || 0;
     const curr = parseFloat(data.currentReading) || 0;
@@ -37,6 +38,7 @@ export const useCreateBill = (shopId: string | string[] | undefined) => {
       currentReading: "",
       ratePerUnit: "10",
       fixedCharges: "0",
+      calculationMethod: "ADD",
     },
     mode: "onChange"
   });
@@ -70,6 +72,7 @@ export const useCreateBill = (shopId: string | string[] | undefined) => {
                 currentReading: "",
                 ratePerUnit: settings.ratePerUnit.toString(),
                 fixedCharges: settings.fixedCharges.toString(),
+                calculationMethod: "ADD",
             });
         } catch (e) {
             console.error("Error loading data:", e);
@@ -89,7 +92,14 @@ export const useCreateBill = (shopId: string | string[] | undefined) => {
 
     const units = Math.max(0, curr - prev);
     const amount = units * rate;
-    const total = amount + fixed;
+    
+    let total = 0;
+    if (formValues.calculationMethod === 'MAX') {
+        total = Math.max(amount, fixed);
+    } else {
+        // Default ADD
+        total = amount + fixed;
+    }
 
     setCalc({ units, amount, total });
   }, [formValues]);

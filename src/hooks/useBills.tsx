@@ -16,7 +16,7 @@ interface BillsHook {
 export const useBills = (): BillsHook => {
     const [bills, setBills] = useState<any[]>([]);
     const [shopsMap, setShopsMap] = useState<Record<number, string>>({});
-    const [refreshing, setRefreshing] = useState(false);
+    const [refreshing] = useState(false);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState('all');
 
@@ -39,20 +39,20 @@ export const useBills = (): BillsHook => {
       setLoading(false);
     }
     };
-
-    useEffect(() => {
-        loadData(filter);
-    }, []);
-
+    
     const onRefresh = () => {
         loadData(filter);
     };
-
+    
     const onFilterChange = (filter: string) => {
         setFilter(filter);
         loadData(filter);
     };
 
+    useEffect(() => {
+        loadData(filter);
+    }, []);
+    
     return {
         bills,
         shopsMap,

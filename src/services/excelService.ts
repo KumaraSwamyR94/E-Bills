@@ -19,7 +19,7 @@ export const exportToExcel = async () => {
         rate: bills.ratePerUnit,
         fixed: bills.fixedCharges,
         amount: bills.totalAmount,
-        isPaid: bills.isPaid
+        isPaid: bills.status
     })
     .from(bills)
     .innerJoin(shops, eq(bills.shopId, shops.id))
@@ -37,7 +37,7 @@ export const exportToExcel = async () => {
         "Rate": item.rate,
         "Fixed Charges": item.fixed,
         "Total Amount": item.amount,
-        "Paid": item.isPaid ? "Yes" : "No"
+        "Payment Status": item.isPaid
     }));
 
     // 3. Create Workbook

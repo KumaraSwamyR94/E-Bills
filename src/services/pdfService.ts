@@ -89,12 +89,16 @@ export const generateAndShareBillPdf = async (shop: any, bill: any) => {
         
         <table class="bill-table">
             <tr>
+                <td class="label">Meter No</td>
+                <td class="value">${shop.meterNo}</td>
+            </tr>
+            <tr>
                 <td class="label">Previous reading</td>
-                <td class="value">${bill.previousReading} units</td>
+                <td class="value">${bill.previousReading}</td>
             </tr>
             <tr>
                 <td class="label">Current reading</td>
-                <td class="value">${bill.currentReading} units</td>
+                <td class="value">${bill.currentReading}</td>
             </tr>
             <tr>
                 <td class="label">Units used</td>

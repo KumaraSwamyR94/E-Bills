@@ -28,7 +28,7 @@ export default function BillsHistory() {
   useFocusEffect(
     useCallback(() => {
         loadData(filter);
-    }, [filter])
+    }, [filter, loadData])
   );
 
   const formatDate = (date: Date) => {
@@ -40,7 +40,7 @@ export default function BillsHistory() {
   };
 
   const renderItem = ({ item }: { item: any }) => (
-    <Card className="mb-3">
+    <Card className="mb-3" onPress={() => router.push(`/bills/${item.id}`)}>
       <View className="flex-row justify-between items-start">
         <View>
           <Text className="text-lg font-bold text-dark">
@@ -74,9 +74,6 @@ export default function BillsHistory() {
          <Text className="text-xs text-secondary font-medium">
             {item.unitsConsumed} Units
          </Text>
-      </View>
-      <View className="flex-row justify-end p-2">
-      <Text onPress={() => router.push(`/bills/${item.id}`)} className="text-primary text-xs mt-2 right-0 underline"> View Details</Text>
       </View>
     </Card>
   );

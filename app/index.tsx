@@ -71,10 +71,10 @@ export default function Dashboard() {
         
         <View className="gap-3">
           <Button 
-            label="New Reading / Bill" 
+            label="New Bill" 
             variant="primary" 
             size="lg"
-            onPress={() => router.push('/shops')} // Select shop first
+            onPress={() => router.push('/bills/create')}
             className="w-full"
           />
           
