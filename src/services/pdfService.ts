@@ -105,12 +105,16 @@ export const generateAndShareBillPdf = async (shop: any, bill: any) => {
                 <td class="value">${bill.unitsConsumed.toFixed(2)}</td>
             </tr>
             <tr>
-                <td class="label">Price Per Unit</td>
-                <td class="value">₹ ${bill.ratePerUnit.toFixed(2)}</td>
+                <td class="label">Unit Threshold</td>
+                <td class="value">${bill.unitThreshold} Units</td>
             </tr>
             <tr>
-                <td class="label">Minimum Price</td>
-                <td class="value">₹ ${bill.fixedCharges.toFixed(2)}</td>
+                <td class="label">Rate ≤ Threshold</td>
+                <td class="value" style="${bill.unitsConsumed <= bill.unitThreshold ? 'color: #16a34a;' : ''}">₹ ${bill.lowUnitRate.toFixed(2)}</td>
+            </tr>
+            <tr>
+                <td class="label">Rate > Threshold</td>
+                <td class="value" style="${bill.unitsConsumed > bill.unitThreshold ? 'color: #2563eb;' : ''}">₹ ${bill.highUnitRate.toFixed(2)}</td>
             </tr>
             
             <tr class="total-row">

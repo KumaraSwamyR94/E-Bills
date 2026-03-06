@@ -16,7 +16,9 @@ export const exportToExcel = async () => {
         prevReading: bills.previousReading,
         currReading: bills.currentReading,
         units: bills.unitsConsumed,
-        rate: bills.ratePerUnit,
+        unitThreshold: bills.unitThreshold,
+        lowUnitRate: bills.lowUnitRate,
+        highUnitRate: bills.highUnitRate,
         fixed: bills.fixedCharges,
         amount: bills.totalAmount,
         isPaid: bills.status
@@ -34,8 +36,10 @@ export const exportToExcel = async () => {
         "Prev Reading": item.prevReading,
         "Curr Reading": item.currReading,
         "Units": item.units,
-        "Rate": item.rate,
-        "Fixed Charges": item.fixed,
+        "Threshold": item.unitThreshold,
+        "Rate (Low)": item.lowUnitRate,
+        "Rate (High)": item.highUnitRate,
+        // "Fixed Charges": item.fixed,
         "Total Amount": item.amount,
         "Payment Status": item.isPaid
     }));

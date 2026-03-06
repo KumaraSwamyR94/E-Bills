@@ -15,6 +15,12 @@
       "components/*": [
         "./src/components/*"
       ],
+      "screens/*": [
+        "./src/screens/*"
+      ],
+      "db/*": [
+        "./src/db/*"
+      ]
     },
     "types": [
       "nativewind/types"

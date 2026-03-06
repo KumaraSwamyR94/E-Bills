@@ -11,9 +11,10 @@ import { getShopById } from "../services/shopService";
 const createBillSchema = z.object({
   previousReading: z.string(),
   currentReading: z.string().min(1, "Current reading is required"),
-  ratePerUnit: z.string().min(1, "Rate is required"),
+  lowUnitRate: z.string().min(1, "Low rate is required"),
+  highUnitRate: z.string().min(1, "High rate is required"),
+  unitThreshold: z.string().min(1, "Threshold is required"),
   fixedCharges: z.string(),
-  calculationMethod: z.enum(["ADD", "MAX"]),
 }).refine((data) => {
     const prev = parseFloat(data.previousReading) || 0;
     const curr = parseFloat(data.currentReading) || 0;
@@ -36,9 +37,10 @@ export const useCreateBill = (shopId: string | string[] | undefined) => {
     defaultValues: {
       previousReading: "0",
       currentReading: "",
-      ratePerUnit: "10",
+      lowUnitRate: "5",
+      highUnitRate: "8",
+      unitThreshold: "100",
       fixedCharges: "0",
-      calculationMethod: "ADD",
     },
     mode: "onChange"
   });
@@ -49,7 +51,8 @@ export const useCreateBill = (shopId: string | string[] | undefined) => {
   const [calc, setCalc] = useState({
     units: 0,
     amount: 0,
-    total: 0
+    total: 0,
+    activeTier: 'low' as 'low' | 'high'
   });
 
   useEffect(() => {
@@ -70,9 +73,10 @@ export const useCreateBill = (shopId: string | string[] | undefined) => {
             reset({
                 previousReading: lastBill ? lastBill.currentReading.toString() : "0",
                 currentReading: "",
-                ratePerUnit: settings.ratePerUnit.toString(),
+                lowUnitRate: settings.lowUnitRate.toString(),
+                highUnitRate: settings.highUnitRate.toString(),
+                unitThreshold: settings.unitThreshold.toString(),
                 fixedCharges: settings.fixedCharges.toString(),
-                calculationMethod: "ADD",
             });
         } catch (e) {
             console.error("Error loading data:", e);
@@ -87,21 +91,27 @@ export const useCreateBill = (shopId: string | string[] | undefined) => {
   useEffect(() => {
     const prev = parseFloat(formValues.previousReading || "0") || 0;
     const curr = parseFloat(formValues.currentReading || "0") || 0;
-    const rate = parseFloat(formValues.ratePerUnit || "0") || 0;
+    const lowRate = parseFloat(formValues.lowUnitRate || "0") || 0;
+    const highRate = parseFloat(formValues.highUnitRate || "0") || 0;
+    const threshold = parseFloat(formValues.unitThreshold || "100") || 100;
     const fixed = parseFloat(formValues.fixedCharges || "0") || 0;
 
     const units = Math.max(0, curr - prev);
-    const amount = units * rate;
     
-    let total = 0;
-    if (formValues.calculationMethod === 'MAX') {
-        total = Math.max(amount, fixed);
+    let amount = 0;
+    let activeTier: 'low' | 'high' = 'low';
+
+    if (units <= threshold) {
+        amount = units * lowRate;
+        activeTier = 'low';
     } else {
-        // Default ADD
-        total = amount + fixed;
+        amount = units * highRate;
+        activeTier = 'high';
     }
 
-    setCalc({ units, amount, total });
+    const total = amount + fixed;
+
+    setCalc({ units, amount, total, activeTier });
   }, [formValues]);
 
   const onSubmit = async (data: CreateBillFormValues) => {
@@ -109,7 +119,9 @@ export const useCreateBill = (shopId: string | string[] | undefined) => {
     try {
         const prev = parseFloat(data.previousReading);
         const curr = parseFloat(data.currentReading);
-        const rate = parseFloat(data.ratePerUnit);
+        const lowRate = parseFloat(data.lowUnitRate);
+        const highRate = parseFloat(data.highUnitRate);
+        const threshold = parseFloat(data.unitThreshold);
         const fixed = parseFloat(data.fixedCharges);
 
         await createBill({
@@ -118,7 +130,9 @@ export const useCreateBill = (shopId: string | string[] | undefined) => {
             previousReading: prev,
             currentReading: curr,
             unitsConsumed: calc.units,
-            ratePerUnit: rate,
+            unitThreshold: threshold,
+            lowUnitRate: lowRate,
+            highUnitRate: highRate,
             fixedCharges: fixed,
             totalAmount: calc.total,
             status: 'pending'
