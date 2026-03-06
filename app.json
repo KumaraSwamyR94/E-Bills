@@ -1,38 +1,47 @@
 {
   "expo": {
-    "name": "electricity-billing-app",
-    "slug": "electricity-billing-app",
-    "scheme": "electricity-billing-app",
+    "name": "Electricity Billing",
+    "slug": "electricity-billing",
+    "scheme": "electricity-billing",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./src/assets/icon.png",
+    "icon": "./src/assets/icons/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
-    "splash": {
-      "image": "./src/assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "versionCode": 1,
       "version": "1.0.0",
+      "icon": "./src/assets/icons/android/ic_launcher.png",
       "adaptiveIcon": {
-        "foregroundImage": "./src/assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./src/assets/icons/android/ic_launcher_foreground.png",
+        "backgroundImage": "./src/assets/icons/android/ic_launcher_background.png",
+        "monochromeImage": "./src/assets/icons/android/ic_launcher_monochrome.png"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.jairam.electricitybillingapp"
+      "package": "com.jairam.electricitybilling"
     },
     "web": {
-      "favicon": "./src/assets/favicon.png"
+      "favicon": "./src/assets/icons/favicon.png"
     },
     "plugins": [
       "expo-router",
-      "expo-sqlite"
+      "expo-sqlite",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#ffffff",
+          "image": "./src/assets/icons/splash-icon.png",
+          "dark": {
+            "image": "./src/assets/icons/splash-icon.png",
+            "backgroundColor": "#000000"
+          },
+          "imageWidth": 200
+        }
+      ]
     ]
   }
 }

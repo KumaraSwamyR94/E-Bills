@@ -1,9 +1,11 @@
 import { Stack } from "expo-router";
+import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from "react";
 import { View, Text, ActivityIndicator } from "react-native";
 import { initializeDb } from "../src/db";
 import "../global.css";
-import { StatusBar } from 'expo-status-bar';
+
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [dbReady, setDbReady] = useState(false);
@@ -23,9 +25,10 @@ export default function RootLayout() {
     );
   }
 
+  SplashScreen.hideAsync();
+
   return (
     <>
-      <StatusBar style="dark" />
       <Stack
         screenOptions={{ headerShown: false }}
       >
