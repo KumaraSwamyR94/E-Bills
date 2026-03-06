@@ -8,7 +8,9 @@ import { exportToExcel } from "../services/excelService";
 import { resetDb } from "../db";
 
 const settingsSchema = z.object({
-    rate: z.string().min(1, "Rate is required"),
+    lowUnitRate: z.string().min(1, "Low rate is required"),
+    highUnitRate: z.string().min(1, "High rate is required"),
+    unitThreshold: z.string().min(1, "Threshold is required"),
     fixed: z.string().min(1, "Fixed charges are required"),
 });
 
@@ -20,7 +22,9 @@ export const useSettings = () => {
   const form = useForm<SettingsFormValues>({
       resolver: zodResolver(settingsSchema),
       defaultValues: {
-          rate: "10",
+          lowUnitRate: "5",
+          highUnitRate: "8",
+          unitThreshold: "100",
           fixed: "0"
       }
   });
@@ -30,7 +34,9 @@ export const useSettings = () => {
   const loadSettings = useCallback(async () => {
     const s = await getSettings();
     reset({
-        rate: s.ratePerUnit.toString(),
+        lowUnitRate: s.lowUnitRate.toString(),
+        highUnitRate: s.highUnitRate.toString(),
+        unitThreshold: s.unitThreshold.toString(),
         fixed: s.fixedCharges.toString()
     });
   }, [reset]);
@@ -41,7 +47,9 @@ export const useSettings = () => {
 
   const onSubmit = async (data: SettingsFormValues) => {
     setLoading(true);
-    await saveSetting('rate_per_unit', data.rate);
+    await saveSetting('low_unit_rate', data.lowUnitRate);
+    await saveSetting('high_unit_rate', data.highUnitRate);
+    await saveSetting('unit_threshold', data.unitThreshold);
     await saveSetting('fixed_charges', data.fixed);
     setLoading(false);
     Alert.alert("Success", "Settings saved");

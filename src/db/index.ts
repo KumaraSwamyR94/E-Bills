@@ -38,7 +38,9 @@ export const initializeDb = async () => {
             previous_reading REAL NOT NULL,
             current_reading REAL NOT NULL,
             units_consumed REAL NOT NULL,
-            rate_per_unit REAL NOT NULL,
+            unit_threshold REAL NOT NULL DEFAULT 100,
+            low_unit_rate REAL NOT NULL,
+            high_unit_rate REAL NOT NULL,
             fixed_charges REAL DEFAULT 0,
             total_amount REAL NOT NULL,
             bill_pdf_path TEXT,
@@ -51,19 +53,6 @@ export const initializeDb = async () => {
             value TEXT NOT NULL
         );
     `);
-
-    // Migration for existing tables
-    try {
-        await expoDb.execAsync("ALTER TABLE bills ADD COLUMN status TEXT DEFAULT 'pending'");
-        console.log("Migration: Added status column to bills");
-    } catch (e: any) {
-        // Ignore error if column already exists
-        if (!e.message.includes("duplicate column name")) {
-            console.log("Migration skipped or failed (likely already exists):", e.message);
-        }
-    }
-    
-    console.log("Database initialized");
 };
 
 export const resetDb = async () => {

@@ -45,8 +45,9 @@ export default function CreateBill() {
       <ScrollView className="flex-1 p-4 bg-gray-50">
         
         {/* Shop Selector */}
-        <TouchableOpacity onPress={() => setShowShopSelector(true)}>
-            <Card className={`mb-6 flex-row justify-between items-center ${shop ? 'bg-blue-50 border-blue-200' : 'bg-white border-gray-200'}`}>
+            <Card className={`mb-6 flex-row justify-between items-center ${shop ? 'bg-blue-50 border-blue-200' : 'bg-white border-gray-200'}`} onPress={() => {
+            setShowShopSelector(true);
+            }}>
                 <View>
                     <Text className="text-sm font-bold text-gray-500 uppercase mb-1">Billing For</Text>
                     {shop ? (
@@ -60,7 +61,6 @@ export default function CreateBill() {
                 </View>
                 <ChevronDown size={24} color="#6B7280" />
             </Card>
-        </TouchableOpacity>
 
         {loading && <View className="py-4"><Text className="text-center text-gray-500">Loading details...</Text></View>}
 
@@ -106,20 +106,61 @@ export default function CreateBill() {
                 <View className="flex-1">
                     <Controller
                         control={control}
-                        name="ratePerUnit"
+                        name="lowUnitRate"
                         render={({ field: { onChange, onBlur, value } }) => (
                             <Input
-                                label="Rate / Unit (₹)"
+                                label="Rate ≤ Threshold (₹)"
                                 onBlur={onBlur}
                                 onChangeText={onChange}
                                 value={value}
-                                error={errors.ratePerUnit?.message}
+                                error={errors.lowUnitRate?.message}
                                 keyboardType="numeric"
+                                editable={false}
+                                className="bg-gray-100 text-gray-500"
                             />
                         )}
                     />
                 </View>
                 <View className="flex-1">
+                    <Controller
+                        control={control}
+                        name="highUnitRate"
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <Input
+                                label="Rate > Threshold (₹)"
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                error={errors.highUnitRate?.message}
+                                keyboardType="numeric"
+                                editable={false}
+                                className="bg-gray-100 text-gray-500"
+                            />
+                        )}
+                    />
+                </View>
+              </View>
+
+              <View className="flex-row gap-4">
+                <View className="flex-1">
+                    <Controller
+                        control={control}
+                        name="unitThreshold"
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <Input
+                                label="Unit Threshold"
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                error={errors.unitThreshold?.message}
+                                keyboardType="numeric"
+                                editable={false}
+                                className="bg-gray-100 text-gray-500"
+                            />
+                        )}
+                    />
+                </View>
+                {/* <View className="flex-1">
                     <Controller
                         control={control}
                         name="fixedCharges"
@@ -134,46 +175,37 @@ export default function CreateBill() {
                             />
                         )}
                     />
-                </View>
+                </View> */}
               </View>
 
-              <View className="mb-4">
-                  <Text className="text-gray-500 font-medium mb-2">Calculation Logic</Text>
-                  <Controller
-                      control={control}
-                      name="calculationMethod"
-                      render={({ field: { onChange, value } }) => (
-                          <View className="flex-row gap-2">
-                              <TouchableOpacity 
-                                onPress={() => onChange("ADD")}
-                                className={`flex-1 p-3 border rounded-lg ${value === "ADD" ? "bg-blue-50 border-blue-500" : "bg-white border-gray-200"}`}
-                              >
-                                  <Text className={`text-center font-medium ${value === "ADD" ? "text-blue-700" : "text-gray-600"}`}>Fixed + Energy</Text>
-                              </TouchableOpacity>
-                              <TouchableOpacity 
-                                onPress={() => onChange("MAX")}
-                                className={`flex-1 p-3 border rounded-lg ${value === "MAX" ? "bg-blue-50 border-blue-500" : "bg-white border-gray-200"}`}
-                              >
-                                  <Text className={`text-center font-medium ${value === "MAX" ? "text-blue-700" : "text-gray-600"}`}>Max(Fixed, Energy)</Text>
-                              </TouchableOpacity>
-                          </View>
-                      )}
-                  />
-              </View>
-
-              <Card className="my-4 bg-purple-50 border-purple-200 border-2 rounded-2xl shadow-2xl">
+              <Card className="my-4 bg-purple-50 border-purple-200 border-2 rounded-2xl shadow-sm">
                 <View className="flex-row justify-between mb-2">
-                    <Text className="text-gray-900">Units Consumed</Text>
+                    <Text className="text-gray-900 font-medium">Units Consumed</Text>
                     <Text className="text-gray-900 font-bold">{calc.units.toFixed(1)}</Text>
                 </View>
-                <View className="flex-row justify-between mb-2">
-                    <Text className="text-gray-900">Energy Charges</Text>
+                
+                <View className="flex-row justify-between mb-2 items-center">
+                    <View className="flex-row items-center">
+                        <Text className="text-gray-900 font-medium">Energy Charges</Text>
+                        <View className={`ml-2 px-2 py-0.5 rounded ${calc.activeTier === 'low' ? 'bg-green-100' : 'bg-blue-100'}`}>
+                            <Text className={`text-[10px] font-bold ${calc.activeTier === 'low' ? 'text-green-700' : 'text-blue-700'}`}>
+                                {calc.activeTier === 'low' ? '≤ THRESHOLD' : '> THRESHOLD'}
+                            </Text>
+                        </View>
+                    </View>
                     <Text className="text-gray-900 font-bold">₹ {calc.amount.toFixed(2)}</Text>
                 </View>
-                <View className="h-[1px] bg-gray-700 my-2" />
-                <View className="flex-row justify-between">
-                    <Text className="text-lg text-gray-900 font-bold">Total Bill</Text>
-                    <Text className="text-2xl text-green-400 font-bold">₹ {calc.total.toFixed(2)}</Text>
+
+                {calc.units > 0 && (
+                    <Text className="text-[10px] text-gray-500 italic mb-2">
+                        Applied rate: ₹ {calc.activeTier === 'low' ? control._defaultValues.lowUnitRate : control._defaultValues.highUnitRate} per unit
+                    </Text>
+                )}
+
+                <View className="h-[1px] bg-purple-200 my-2" />
+                <View className="flex-row justify-between items-center">
+                    <Text className="text-lg text-purple-900 font-bold">Total Bill</Text>
+                    <Text className="text-2xl text-purple-700 font-extrabold">₹ {calc.total.toFixed(2)}</Text>
                 </View>
               </Card>
 
@@ -216,8 +248,7 @@ export default function CreateBill() {
                     </View>
                 }
                 renderItem={({ item }) => (
-                    <TouchableOpacity onPress={() => handleSelectShop(item.id)}>
-                        <Card className={`mb-3 flex-row items-center border border-gray-100 shadow-sm ${selectedShopId === String(item.id) ? 'bg-blue-50 border-blue-200' : ''}`}>
+                        <Card className={`mb-3 flex-row items-center border border-gray-100 shadow-sm ${selectedShopId === String(item.id) ? 'bg-blue-50 border-blue-200' : ''}`} onPress={() => handleSelectShop(item.id)}>
                              <View className="h-10 w-10 bg-blue-100 rounded-full items-center justify-center mr-4">
                                 <Store size={20} color="#2563eb" />
                             </View>
@@ -226,7 +257,6 @@ export default function CreateBill() {
                                 <Text className="text-gray-500">Shop #{item.shopNumber}</Text>
                             </View>
                         </Card>
-                    </TouchableOpacity>
                 )}
             />
         </View>

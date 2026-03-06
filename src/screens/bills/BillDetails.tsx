@@ -66,15 +66,36 @@ export default function BillDetails() {
                 </View>
 
                 <View className="flex-row justify-between mb-2">
-                    <Text className="text-gray-600">Rate / Unit</Text>
-                    <Text className="font-medium text-dark">₹ {bill.ratePerUnit}</Text>
+                    <Text className="text-gray-600">Unit Threshold</Text>
+                    <Text className="font-medium text-dark">{bill.unitThreshold} Units</Text>
+                </View>
+
+                <View className="flex-row justify-between mb-2">
+                    <Text className="text-gray-600">Rate ≤ Threshold</Text>
+                    <Text className={`font-medium ${bill.unitsConsumed <= bill.unitThreshold ? 'text-green-600 font-bold' : 'text-dark'}`}>
+                        ₹ {bill.lowUnitRate}
+                    </Text>
+                </View>
+
+                <View className="flex-row justify-between mb-2">
+                    <Text className="text-gray-600">Rate {'>'} Threshold</Text>
+                    <Text className={`font-medium ${bill.unitsConsumed > bill.unitThreshold ? 'text-blue-600 font-bold' : 'text-dark'}`}>
+                        ₹ {bill.highUnitRate}
+                    </Text>
                 </View>
 
                 <View className="h-[1px] bg-gray-100 my-2" />
 
                 <View className="flex-row justify-between mb-2">
-                    <Text className="text-gray-600">Energy Charges</Text>
-                    <Text className="font-medium text-dark">₹ {(bill.unitsConsumed * bill.ratePerUnit).toFixed(2)}</Text>
+                    <View className="flex-row items-center">
+                        <Text className="text-gray-600">Energy Charges</Text>
+                        <View className={`ml-2 px-2 py-0.5 rounded ${bill.unitsConsumed <= bill.unitThreshold ? 'bg-green-100' : 'bg-blue-100'}`}>
+                            <Text className={`text-[10px] font-bold ${bill.unitsConsumed <= bill.unitThreshold ? 'text-green-700' : 'text-blue-700'}`}>
+                                {bill.unitsConsumed <= bill.unitThreshold ? 'LOW RATE' : 'HIGH RATE'}
+                            </Text>
+                        </View>
+                    </View>
+                    <Text className="font-medium text-dark text-lg">₹ {(bill.totalAmount - (bill.fixedCharges || 0)).toFixed(2)}</Text>
                 </View>
 
                 <View className="flex-row justify-between mb-2">

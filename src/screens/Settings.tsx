@@ -19,17 +19,31 @@ export default function Settings() {
     <ScrollView className="flex-1 p-4 bg-gray-50">
       <Card className="mb-6 bg-white">
         <Text className="text-lg font-bold mb-4 text-gray-900">Default Billing Configuration</Text>
-        
         <Controller
             control={control}
-            name="rate"
+            name="unitThreshold"
             render={({ field: { onChange, onBlur, value } }) => (
                 <Input
-                    label="Default Rate Per Unit (₹)"
+                    label="Base Unit(s)"
                     onBlur={onBlur}
                     onChangeText={onChange}
                     value={value}
-                    error={errors.rate?.message}
+                    error={errors.unitThreshold?.message}
+                    keyboardType="numeric"
+                />
+            )}
+        />
+
+        <Controller
+            control={control}
+            name="lowUnitRate"
+            render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                    label={`Rate below Base Unit(s)`}
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    value={value}
+                    error={errors.lowUnitRate?.message}
                     keyboardType="numeric"
                 />
             )}
@@ -37,14 +51,14 @@ export default function Settings() {
         
         <Controller
             control={control}
-            name="fixed"
+            name="highUnitRate"
             render={({ field: { onChange, onBlur, value } }) => (
                 <Input
-                    label="Default Fixed Charges (₹)"
+                    label={`Rate above Base Unit(s)`}
                     onBlur={onBlur}
                     onChangeText={onChange}
                     value={value}
-                    error={errors.fixed?.message}
+                    error={errors.highUnitRate?.message}
                     keyboardType="numeric"
                 />
             )}
