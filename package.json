@@ -16,6 +16,7 @@
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.45.1",
     "expo": "~54.0.31",
+    "expo-application": "~7.0.8",
     "expo-constants": "~18.0.13",
     "expo-file-system": "~19.0.21",
     "expo-linking": "~8.0.11",

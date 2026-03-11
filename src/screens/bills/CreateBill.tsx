@@ -160,7 +160,7 @@ export default function CreateBill() {
                         )}
                     />
                 </View>
-                {/* <View className="flex-1">
+                <View className="flex-1">
                     <Controller
                         control={control}
                         name="fixedCharges"
@@ -175,13 +175,17 @@ export default function CreateBill() {
                             />
                         )}
                     />
-                </View> */}
+                </View>
               </View>
 
               <Card className="my-4 bg-purple-50 border-purple-200 border-2 rounded-2xl shadow-sm">
                 <View className="flex-row justify-between mb-2">
                     <Text className="text-gray-900 font-medium">Units Consumed</Text>
                     <Text className="text-gray-900 font-bold">{calc.units.toFixed(1)}</Text>
+                </View>
+                <View className="flex-row justify-between mb-2">
+                    <Text className="text-gray-900 font-medium">Fixed Charges</Text>
+                    <Text className="text-gray-900 font-bold">{calc.fixed.toFixed(2)}</Text>
                 </View>
                 
                 <View className="flex-row justify-between mb-2 items-center">

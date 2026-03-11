@@ -1,7 +1,8 @@
 import { View, Text, ScrollView } from "react-native";
 import { Controller } from "react-hook-form";
-import { Input, Button, Card, CustomHeader } from "../components";
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as Application from 'expo-application';
+import { Input, Button, Card, CustomHeader } from "../components";
 import { useSettings } from "../hooks";
 
 export default function Settings() {
@@ -16,7 +17,7 @@ export default function Settings() {
   return (
     <SafeAreaView className="flex-1">
       <CustomHeader title="Settings" />
-    <ScrollView className="flex-1 p-4 bg-gray-50">
+    <ScrollView className="flex-1 bg-gray-50" contentContainerClassName="p-4 flex-grow">
       <Card className="mb-6 bg-white">
         <Text className="text-lg font-bold mb-4 text-gray-900">Default Billing Configuration</Text>
         <Controller
@@ -63,6 +64,21 @@ export default function Settings() {
                 />
             )}
         />
+        
+        <Controller
+            control={control}
+            name="fixed"
+            render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                    label={`Fixed Charge`}
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    value={value}
+                    error={errors.fixed?.message}
+                    keyboardType="numeric"
+                />
+            )}
+        />
 
         <Button label="Save Configuration" onPress={save} loading={loading} />
       </Card>
@@ -80,18 +96,21 @@ export default function Settings() {
         />
       </Card>
       
-      <View className="mt-8 pt-6 border-t border-gray-200">
+      <Card className="bg-white mt-8">
         <Text className="text-sm font-bold text-red-600 uppercase mb-4">Danger Zone</Text>
+        <Text className="text-gray-500 mb-4">
+            This action will permanently delete all billing history and shop data. Use with caution.
+        </Text>
         
         <Button 
             label="Reset Database" 
             variant="destructive"
             onPress={handleReset}
         />
-      </View>
+      </Card>
       
       <View className="mt-8 items-center">
-        <Text className="text-gray-400 text-xs">Version 1.0.0</Text>
+        <Text className="text-sm text-gray-500">{`Version: ${Application.nativeApplicationVersion}(${Application.nativeBuildVersion})`}</Text>
       </View>
     </ScrollView>
     </SafeAreaView>

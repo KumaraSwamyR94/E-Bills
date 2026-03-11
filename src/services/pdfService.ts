@@ -116,7 +116,10 @@ export const generateAndShareBillPdf = async (shop: any, bill: any) => {
                 <td class="label">Rate > Threshold</td>
                 <td class="value" style="${bill.unitsConsumed > bill.unitThreshold ? 'color: #2563eb;' : ''}">₹ ${bill.highUnitRate.toFixed(2)}</td>
             </tr>
-            
+            <tr>
+                <td class="label">Fixed Charge</td>
+                <td class="value">₹ ${bill.fixed.toFixed(2)}</td>
+            </tr>
             <tr class="total-row">
                 <td class="label">Total Amount Payabele</td>
                 <td class="value">₹ ${bill.totalAmount.toFixed(2)}</td>

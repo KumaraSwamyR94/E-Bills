@@ -52,6 +52,7 @@ export const useCreateBill = (shopId: string | string[] | undefined) => {
     units: 0,
     amount: 0,
     total: 0,
+    fixed: 0,
     activeTier: 'low' as 'low' | 'high'
   });
 
@@ -111,7 +112,7 @@ export const useCreateBill = (shopId: string | string[] | undefined) => {
 
     const total = amount + fixed;
 
-    setCalc({ units, amount, total, activeTier });
+    setCalc({ units, fixed, amount, total, activeTier });
   }, [formValues]);
 
   const onSubmit = async (data: CreateBillFormValues) => {
