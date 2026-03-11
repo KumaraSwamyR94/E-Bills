@@ -39,7 +39,7 @@ export const exportToExcel = async () => {
         "Threshold": item.unitThreshold,
         "Rate (Low)": item.lowUnitRate,
         "Rate (High)": item.highUnitRate,
-        // "Fixed Charges": item.fixed,
+        "Fixed Charges": item.fixed,
         "Total Amount": item.amount,
         "Payment Status": item.isPaid
     }));
